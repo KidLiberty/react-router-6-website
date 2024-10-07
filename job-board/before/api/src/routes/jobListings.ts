@@ -45,41 +45,39 @@ jobListingsRouter.post("/", async (req, res) => {
   res.json(jobListing)
 })
 
-jobListingsRouter.post(
-  "/:id/create-publish-payment-intent",
-  async (req, res) => {
-    if (req.session.user?.id == null) {
-      res.status(401).json({ message: "You must be logged in to do that" })
-      return
-    }
-
-    const body = await zParse(req.body, createPublishPaymentIntentSchema, res)
-    if (body == null) return
-
-    const id = req.params.id
-    const jobListing = await db.jobListing.findFirst({
-      where: { id, postedById: req.session.user.id },
-    })
-
-    if (jobListing == null) {
-      res.status(404).json({ message: "Job listing not found" })
-      return
-    }
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: getJobListingPriceInCents(body.duration),
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true
-      },
-      metadata: {
-        jobListingId: req.params.id,
-        duration: body.duration
-      },
-    })
-
-    res.json({ clientSecret: paymentIntent.client_secret })
+jobListingsRouter.post("/:id/create-publish-payment-intent", async (req, res) => {
+  if (req.session.user?.id == null) {
+    res.status(401).json({ message: "You must be logged in to do that" })
+    return
   }
+
+  const body = await zParse(req.body, createPublishPaymentIntentSchema, res)
+  if (body == null) return
+
+  const id = req.params.id
+  const jobListing = await db.jobListing.findFirst({
+    where: { id, postedById: req.session.user.id },
+  })
+
+  if (jobListing == null) {
+    res.status(404).json({ message: "Job listing not found" })
+    return
+  }
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: getJobListingPriceInCents(body.duration),
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true
+    },
+    metadata: {
+      jobListingId: req.params.id,
+      duration: body.duration
+    },
+  })
+
+  res.json({ clientSecret: paymentIntent.client_secret })
+}
 )
 
 jobListingsRouter.get("/:id", async (req, res) => {
