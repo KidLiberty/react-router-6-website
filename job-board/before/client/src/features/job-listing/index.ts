@@ -1,2 +1,2 @@
 export { JobListingForm } from './components/JobListingForm'
-export { createJobListing } from './services/jobListing'
+export { createJobListing, getAllMyListings } from './services/jobListing'
