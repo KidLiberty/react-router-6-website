@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom'
-import { FieldValues, useForm } from 'react-hook-form'
+import { Control, FieldValues, type Path, type PathValue, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -11,10 +10,15 @@ import { Input } from '@/components/ui/input'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { JOB_LISTING_EXPERIENCE_LEVELS, JOB_LISTING_TYPES } from '@backend/constants/types'
 
 type JobListingValues = z.infer<typeof jobListingFormSchema>
 
-export function JobListingForm() {
+type JobListingFormProps = {
+  onSubmit: (values: JobListingValues) => void
+}
+
+export function JobListingForm({ onSubmit }: JobListingFormProps) {
   const form = useForm<JobListingValues>({
     resolver: zodResolver(jobListingFormSchema),
     defaultValues: {
@@ -29,10 +33,6 @@ export function JobListingForm() {
       description: ''
     }
   })
-
-  async function onSubmit(values: JobListingValues) {
-    // TODO: Implement
-  }
 
   return (
     <Form {...form}>
@@ -84,37 +84,23 @@ export function JobListingForm() {
               <FormItem>
                 <FormLabel>Apply URL</FormLabel>
                 <FormControl>
-                  <Input type='text' {...field} />
+                  <Input type='url' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
+          <JobListingSelectFormField
+            label='Type'
+            options={JOB_LISTING_TYPES}
             control={form.control}
             name='type'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Input type='text' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
           />
-          <FormField
+          <JobListingSelectFormField
+            label='Experience Level'
+            options={JOB_LISTING_EXPERIENCE_LEVELS}
             control={form.control}
             name='experienceLevel'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Experience Level</FormLabel>
-                <FormControl>
-                  <Input type='text' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
           />
           <FormField
             control={form.control}
@@ -175,19 +161,22 @@ export function JobListingForm() {
   )
 }
 
-type JobListingSelectFormFieldProps<T> = {
-
+type JobListingSelectFormFieldProps<T extends FieldValues> = {
+  label: string
+  control: Control<T>
+  name: Path<T>
+  options: readonly PathValue<T, Path<T>>[]
 }
 
-function JobListingSelectFormField<T extends FieldValues>({ label, control, name, options }) {
+function JobListingSelectFormField<T extends FieldValues>({ label, control, name, options }: JobListingSelectFormFieldProps<T>) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className='col-span-full'>
-          <FormLabel>Description</FormLabel>
-          <Select>
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <Select onValueChange={val => field.onChange(val as PathValue<T, Path<T>>)} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue />
