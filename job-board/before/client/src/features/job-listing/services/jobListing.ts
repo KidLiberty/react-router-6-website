@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
+import { jobListingSchema } from '../constants/schemas'
 import { jobListingFormSchema } from '@backend/constants/schemas/jobListings'
 import { baseApi } from '@/services/baseApi'
-import { jobListingSchema } from '../constants/schemas'
 
 export function createJobListing(data: z.infer<typeof jobListingFormSchema>) {
   return baseApi
@@ -14,4 +14,21 @@ export function getAllMyListings() {
   return baseApi
     .get('/job-listings/my-listings')
     .then(res => z.array(jobListingSchema).parseAsync(res.data))
+}
+
+export function deleteListing(id: string) {
+  // return Promise.reject() testing failed attempt
+  return baseApi.delete(`/job-listings/${id}`)
+}
+
+export function getJobListing(id: string) {
+  return baseApi
+    .get(`/job-listings/${id}`)
+    .then(res => jobListingSchema.parseAsync(res.data))
+}
+
+export function editJobListing(id: string, data: z.infer<typeof jobListingFormSchema>) {
+  return baseApi
+    .put(`/job-listings/${id}`, data)
+    .then(res => jobListingSchema.parseAsync(res.data))
 }

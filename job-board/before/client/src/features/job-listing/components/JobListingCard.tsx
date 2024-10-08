@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Banknote, CalendarDays, GraduationCap } from 'lucide-react'
+
+import { JobListing } from '../constants/types'
 import { formatCurrency } from '@/utils/formatters'
 import { cn } from '@/utils/shadcnUtils'
-import { Banknote, CalendarDays, GraduationCap } from 'lucide-react'
-import { JobListing } from '../constants/types'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 type JobListingCardProps = {
   className?: string

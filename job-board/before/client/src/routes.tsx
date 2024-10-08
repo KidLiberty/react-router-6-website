@@ -1,13 +1,15 @@
 import { Navigate, RouteObject } from 'react-router-dom'
+
 import { RootLayout } from '@/layouts/RootLayout'
+import { AuthLayout, LoginForm, SignupForm } from '@/features/authentication'
+
 import { ErrorPage } from '@/pages/ErrorPage'
 import { TaskListPage } from '@/pages/tasks/TaskListPage'
 import { NewTaskPage } from '@/pages/tasks/NewTaskPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
-import { AuthLayout, LoginForm, SignupForm } from './features/authentication'
-import { myJobListingsRoute } from './pages/jobs/my-listings'
-import { NewJobListingsPage } from './pages/jobs/NewJobListingPage'
-
+import { myJobListingsRoute } from '@/pages/jobs/my-listings'
+import { NewJobListingsPage } from '@/pages/jobs/NewJobListingPage'
+import { editJobListingRoute } from '@/pages/jobs/edit'
 
 export const routes: RouteObject[] = [
   {
@@ -32,7 +34,8 @@ export const routes: RouteObject[] = [
             path: 'jobs',
             children: [
               { path: 'my-listings', ...myJobListingsRoute },
-              { path: 'new', element: <NewJobListingsPage /> }
+              { path: 'new', element: <NewJobListingsPage /> },
+              { path: ':id/edit', ...editJobListingRoute }
             ]
           },
           {

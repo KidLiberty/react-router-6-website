@@ -1,11 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { Await, useDeferredLoaderData } from '@/lib/reactRouter';
-import { Link } from 'react-router-dom';
-import { loader } from './loader';
-import { Suspense } from 'react';
+import { Suspense } from 'react'
+import { Link } from 'react-router-dom'
 
-import { MyJobListingGrid } from '@/features/job-listing/components/MyJobListingGrid';
+import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { Await, useDeferredLoaderData } from '@/lib/reactRouter'
+import { loader } from './loader'
+
+import { MyJobListingGrid } from '@/features/job-listing/components/MyJobListingGrid'
+import { JobListingSkeletonGrid } from '@/features/job-listing'
 
 export function MyJobListingsPage() {
   const { jobListingsPromise } = useDeferredLoaderData<typeof loader>()
@@ -15,15 +17,13 @@ export function MyJobListingsPage() {
       <PageHeader
         btnSection={
           <Button asChild variant='outline'>
-            <Link to='/jobs/new'>
-              Create Listing
-            </Link>
+            <Link to='/jobs/new'>Create Listing</Link>
           </Button>
         }
       >
         My Job Listings
       </PageHeader>
-      <Suspense fallback={<h1>Loading...</h1>}>
+      <Suspense fallback={<JobListingSkeletonGrid />}>
         <Await resolve={jobListingsPromise}>
           {jobListings => <MyJobListingGrid jobListings={jobListings} />}
         </Await>
