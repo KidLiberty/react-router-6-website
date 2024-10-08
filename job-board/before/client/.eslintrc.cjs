@@ -19,9 +19,15 @@ module.exports = {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"],
     },
-    "import/resolver": {
-      typescript: true,
-    },
+    settings: {
+      'import/resolver': {
+        alias: {
+          map: [['@', './src']], // Adjust this according to your structure
+          extensions: ['.js', '.jsx', '.ts', '.tsx'], // Add other extensions as needed
+        },
+        typescript: true
+      },
+    }
   },
   rules: {
     "react-refresh/only-export-components": "warn",
