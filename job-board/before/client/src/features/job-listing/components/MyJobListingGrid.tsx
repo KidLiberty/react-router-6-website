@@ -1,5 +1,5 @@
-
 import { JobListing } from '../constants/types'
+import { JobListingCard } from './JobListingCard'
 import { JobListingGrid } from './JobListingGrid'
 
 type MyJobListingGridProps = {
@@ -9,13 +9,20 @@ type MyJobListingGridProps = {
 export function MyJobListingGrid({ jobListings }: MyJobListingGridProps) {
   return (
     <JobListingGrid>
-      {jobListings.map(jobListing => <MyJobListingCard key={jobListing.id} />)}
+      {jobListings.map(jobListing => <MyJobListingCard key={jobListing.id} jobListing={jobListing} />)}
     </JobListingGrid>
   )
 }
 
-function MyJobListingCard() {
+type MyJobListingCardProps = {
+  jobListing: JobListing
+}
+
+function MyJobListingCard({ jobListing }: MyJobListingCardProps) {
   return (
-    <div></div>
+    <JobListingCard
+      {...jobListing}
+    // footerBtns={ }
+    />
   )
 }
