@@ -10,6 +10,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { myJobListingsRoute } from '@/pages/jobs/my-listings'
 import { NewJobListingsPage } from '@/pages/jobs/NewJobListingPage'
 import { editJobListingRoute } from '@/pages/jobs/edit'
+import { OrderCompleteRoute } from './pages/jobs/order-complete'
 
 export const routes: RouteObject[] = [
   {
@@ -35,7 +36,8 @@ export const routes: RouteObject[] = [
             children: [
               { path: 'my-listings', ...myJobListingsRoute },
               { path: 'new', element: <NewJobListingsPage /> },
-              { path: ':id/edit', ...editJobListingRoute }
+              { path: ':id/edit', ...editJobListingRoute },
+              { path: 'order-complete', ...OrderCompleteRoute }
             ]
           },
           {

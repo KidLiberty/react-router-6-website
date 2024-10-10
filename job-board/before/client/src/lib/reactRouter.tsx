@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Await as AwaitReactRouter, type AwaitProps as AwaitPropsReactRouter, defer, LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { Await as AwaitReactRouter, type AwaitProps as AwaitPropsReactRouter, defer, useLoaderData, LoaderFunctionArgs } from 'react-router-dom';
 
 // Library extensions
 

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDistanceStrict, isAfter } from 'date-fns'
+import { Elements } from '@stripe/react-stripe-js'
 
 import { JobListingCard } from './JobListingCard'
 import { JobListingGrid } from './JobListingGrid'
@@ -16,18 +17,13 @@ import { JOB_LISTING_DURATIONS } from '@backend/constants/types'
 import { formatCurrency } from '@/utils/formatters'
 import { getJobListingPriceInCents } from '@backend/utils/getJobListingPriceInCents'
 import { Badge } from '@/components/ui/badge'
+import { stripePromise } from '@/lib/stripe'
+import { JobListingCheckoutForm } from './JobListingCheckoutForm'
+import { useThemeContext } from '@/hooks/useTheme'
 
 type MyJobListingGridProps = {
   jobListings: JobListing[]
 }
-
-const values: any[] = ['', 1, true, -2, "konnichewa", "welcome", true, "hello", true, true, "NAMASTE", true, "hi", true, 546, true, true, 'hola']
-function getTruthyValues(values: any[]) {
-  const initialValuesLength = values.length
-  const filteredValues = values.filter(value => !!value === true).length
-  return `${filteredValues} out of ${initialValuesLength} Elements`
-}
-console.log(getTruthyValues(values))
 
 export function MyJobListingGrid({ jobListings }: MyJobListingGridProps) {
   const [deletedJobListingIds, setDeletedJobListingIds] = useState<string[]>([])
@@ -73,7 +69,9 @@ type MyJobListingCardProps = {
 }
 
 function MyJobListingCard({ jobListing, deleteJobListing }: MyJobListingCardProps) {
+  const { isDark } = useThemeContext()
   const [selectedDuration, setSelectedDuration] = useState<(typeof JOB_LISTING_DURATIONS)[number]>()
+  const [clientSecret, setClientSecret] = useState<string>()
   const status = getJobListingStatus(jobListing.expiresAt)
 
   return (
@@ -93,11 +91,22 @@ function MyJobListingCard({ jobListing, deleteJobListing }: MyJobListingCardProp
             <Link to={`/jobs/${jobListing.id}/edit`}>Edit</Link>
           </Button>
           {/* Dialog cannot be inside dropdown since they both 'freeze' the UI */}
-          <Dialog open={selectedDuration != null} onOpenChange={() => setSelectedDuration(undefined)}>
+          <Dialog
+            open={selectedDuration != null}
+            onOpenChange={isOpen => {
+              if (isOpen) return
+              setSelectedDuration(undefined)
+              setClientSecret(undefined)
+            }}
+          >
             <DialogContent>
               <DialogTitle>{getPurchaseButtonText(status)} {jobListing.title} for {selectedDuration} days</DialogTitle>
               <DialogDescription>This is a non-refundable purcahse</DialogDescription>
-              {/* Stripe Stuff */}
+              {clientSecret != null && selectedDuration != undefined && (
+                <Elements options={{ appearance: { theme: isDark ? 'night' : 'stripe' }, clientSecret }} stripe={stripePromise}>
+                  <JobListingCheckoutForm amount={getJobListingPriceInCents(selectedDuration) / 100} />
+                </Elements>
+              )}
             </DialogContent>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -110,7 +119,7 @@ function MyJobListingCard({ jobListing, deleteJobListing }: MyJobListingCardProp
                     onClick={async () => {
                       setSelectedDuration(duration)
                       const { clientSecret } = await createPublishPaymentIntent(jobListing.id, duration)
-
+                      setClientSecret(clientSecret)
                     }}
                   >
                     {duration} Days - {formatCurrency(getJobListingPriceInCents(duration) / 100)}
@@ -132,9 +141,9 @@ type DeleteJobListingDialogProps = {
 function DeleteJobListingDialog({ deleteListing }: DeleteJobListingDialogProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      {/* <AlertDialogTrigger>
         <Button variant='ghost'>Delete</Button>
-      </AlertDialogTrigger>
+      </AlertDialogTrigger> */}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete this job listing?</AlertDialogTitle>

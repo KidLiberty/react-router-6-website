@@ -65,9 +65,8 @@ jobListingsRouter.post("/:id/create-publish-payment-intent", async (req, res) =>
   const paymentIntent = await stripe.paymentIntents.create({
     amount: getJobListingPriceInCents(body.duration),
     currency: "usd",
-    automatic_payment_methods: {
-      enabled: true
-    },
+    // Automatic payments are enabled by default in the new API; set them to false
+    automatic_payment_methods: { enabled: false },
     metadata: {
       jobListingId: req.params.id,
       duration: body.duration
