@@ -95,7 +95,7 @@ function NavItem({ to, label }: NavItemProps) {
 function ThemeToggleButton() {
   const { setTheme } = useThemeContext()
   return (
-    <DropdownMenu >
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className='data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800' size='icon' variant='ghost'>
           <Sun className='w-5 h-5 scale-100 dark:scale-0 transition-transform' />

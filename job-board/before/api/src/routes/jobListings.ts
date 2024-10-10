@@ -8,9 +8,7 @@ import { stripe } from "../stripe"
 export const jobListingsRouter = Router()
 
 jobListingsRouter.get("/published", async (req, res) => {
-  res.json(
-    await db.jobListing.findMany({ where: { expiresAt: { gt: new Date() } } })
-  )
+  res.json(await db.jobListing.findMany({ where: { expiresAt: { gt: new Date() } } }))
 })
 
 jobListingsRouter.get("/my-listings", async (req, res) => {
@@ -77,8 +75,7 @@ jobListingsRouter.post("/:id/create-publish-payment-intent", async (req, res) =>
   })
 
   res.json({ clientSecret: paymentIntent.client_secret })
-}
-)
+})
 
 jobListingsRouter.get("/:id", async (req, res) => {
   const id = req.params.id

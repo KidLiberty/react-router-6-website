@@ -9,12 +9,8 @@ export const env = createEnv({
     CLIENT_URL: z.string().url(),
     DATABASE_URL: z.string().url(),
     SESSION_SECRET: z.string().min(32),
-    PORT: z
-      .string()
-      .default("3000")
-      .transform(s => parseInt(s))
-      .pipe(z.number()),
+    PORT: z.string().default("3000").transform(s => parseInt(s)).pipe(z.number())
   },
   isServer: true,
-  runtimeEnv: process.env,
+  runtimeEnv: process.env
 })
