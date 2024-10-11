@@ -3,7 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { signup as signupService, login as loginService, logout as logoutService, getLoggedInUser } from '../services/authentication'
 import type { User } from '../constants/types'
-import LogoutDialog from '../components/LogoutDialog'
+import { LogoutDialog } from '../components/LogoutDialog'
+
+type AuthProviderChildren = {
+  children: ReactElement | ReactElement[]
+}
 
 type AuthContextType = {
   signup: (email: string, password: string) => Promise<void>
@@ -16,13 +20,9 @@ type AuthContextType = {
 
 export const AuthContext = React.createContext<AuthContextType | null>(null)
 
-type AuthProviderChildren = {
-  children: ReactElement | ReactElement[]
-}
-
 export function AuthProvider({ children }: AuthProviderChildren) {
   const [user, setUser] = useState<User>()
-  const [isLoadingUser, setIsLoadingUser] = useState(false)
+  const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [logoutModalIsOpen, setIsLogoutModalOpen] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()

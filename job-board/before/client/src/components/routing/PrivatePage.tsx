@@ -11,7 +11,7 @@ export function PrivatePage({ children }: { children: ReactNode }) {
   if (isLoadingUser) return <LoadingSpinner className='w-24 h-24' />
 
   /*
-   replace replaces the current URL with our login page, 
+   the replace prop replaces the current URL with our login page, 
    state sends them the location of the page they tried to access, which we are doing in the authProvider
   */
   if (user == null) return <Navigate to='/login' replace state={{ location }} />

@@ -60,8 +60,8 @@ stripeRouter.post("/job-listing-order-complete", async (req, res) => {
   await db.jobListing.update({
     where: { id: metadata.jobListingId },
     data: {
-      expiresAt: addDays(startingDate, metadata.duration),
-    },
+      expiresAt: addDays(startingDate, metadata.duration)
+    }
   })
 
   res.sendStatus(200)

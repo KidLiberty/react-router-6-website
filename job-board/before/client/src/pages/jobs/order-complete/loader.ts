@@ -11,6 +11,7 @@ export const loader = deferredLoader(({ request: { url } }) => {
         return 'Something went wrong'
       }
 
+      // Ensure we are returning value
       return stripe
         .retrievePaymentIntent(clientSecret)
         .then(({ paymentIntent }) => {

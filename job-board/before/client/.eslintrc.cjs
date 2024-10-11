@@ -8,6 +8,8 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:import/typescript",
     "plugin:import/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -19,7 +21,12 @@ module.exports = {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"],
     },
-    typescript: true
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   },
   rules: {
     "react-refresh/only-export-components": "warn",

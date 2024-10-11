@@ -7,7 +7,7 @@ type LogoutDialogProps = {
   onOpenChange: (isOpen: boolean) => void
 }
 
-export default function LogoutDialog({ isOpen, onOpenChange }: LogoutDialogProps) {
+export function LogoutDialog({ isOpen, onOpenChange }: LogoutDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { formatDistanceStrict, isAfter } from 'date-fns'
+import { differenceInDays, formatDistanceStrict, isAfter } from 'date-fns'
 import { Elements } from '@stripe/react-stripe-js'
 
 import { JobListingCard } from './JobListingCard'
@@ -28,7 +28,9 @@ type MyJobListingGridProps = {
 export function MyJobListingGrid({ jobListings }: MyJobListingGridProps) {
   const [deletedJobListingIds, setDeletedJobListingIds] = useState<string[]>([])
   const visibleJobListings = useMemo(() => {
-    return jobListings.filter(jobListing => !deletedJobListingIds.includes(jobListing.id))
+    return jobListings
+      .filter(jobListing => !deletedJobListingIds.includes(jobListing.id))
+      .sort(sortJobListings)
   }, [jobListings, deletedJobListingIds])
 
   function deleteJobListing(id: string) {
@@ -141,9 +143,9 @@ type DeleteJobListingDialogProps = {
 function DeleteJobListingDialog({ deleteListing }: DeleteJobListingDialogProps) {
   return (
     <AlertDialog>
-      {/* <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <Button variant='ghost'>Delete</Button>
-      </AlertDialogTrigger> */}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete this job listing?</AlertDialogTitle>
@@ -194,5 +196,17 @@ function getJobListingBadgeVariant(status: ReturnType<typeof getJobListingStatus
       return 'default'
     case 'Expired':
       return 'destructive'
+  }
+}
+
+function sortJobListings(a: JobListing, b: JobListing) {
+  if (a.expiresAt === b.expiresAt) {
+    return 0
+  } else if (a.expiresAt === null) {
+    return -1
+  } else if (b.expiresAt === null) {
+    return 1
+  } else {
+    return differenceInDays(a.expiresAt, b.expiresAt)
   }
 }
