@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Control, FieldValues, type Path, type PathValue, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,9 +10,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { JOB_LISTING_EXPERIENCE_LEVELS, JOB_LISTING_TYPES } from '@backend/constants/types'
-import { useState } from 'react'
 import { JobListingGrid } from './JobListingGrid'
 import { JobListingCard } from './JobListingCard'
 import { JobListingFullDialog } from './JobListingFullDialog'
@@ -201,12 +201,13 @@ function JobListingSelectFormField<T extends FieldValues>({ label, control, name
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              {options.map(option => (
-                <SelectItem key={option} value={option}>{option}</SelectItem>
-              ))}
+              <SelectGroup>
+                {options.map(option => (
+                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
-          <FormDescription>Supports full Markdown</FormDescription>
           <FormMessage />
         </FormItem>
       )}
