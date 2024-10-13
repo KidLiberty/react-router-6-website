@@ -11,9 +11,9 @@ export const jobListingFormSchema = z.object({
   experienceLevel: z.enum(JOB_LISTING_EXPERIENCE_LEVELS),
   salary: z.number().int().positive(),
   shortDescription: z.string().max(200).nonempty(),
-  description: z.string().nonempty(),
+  description: z.string().nonempty()
 })
 
 export const createPublishPaymentIntentSchema = z.object({
-  duration: createUnionSchema(JOB_LISTING_DURATIONS),
+  duration: createUnionSchema(JOB_LISTING_DURATIONS)
 })

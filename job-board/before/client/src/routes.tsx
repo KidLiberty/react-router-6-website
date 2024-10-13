@@ -11,6 +11,7 @@ import { myJobListingsRoute } from '@/pages/jobs/my-listings'
 import { NewJobListingsPage } from '@/pages/jobs/NewJobListingPage'
 import { editJobListingRoute } from '@/pages/jobs/edit'
 import { OrderCompleteRoute } from './pages/jobs/order-complete'
+import { jobListingsIndexRoute } from './pages/jobs/index'
 
 export const routes: RouteObject[] = [
   {
@@ -20,10 +21,7 @@ export const routes: RouteObject[] = [
       {
         errorElement: <ErrorPage />,
         children: [
-          {
-            index: true,
-            element: <Navigate to='/tasks' replace />,
-          },
+          { index: true, element: <Navigate to='/tasks' replace /> },
           {
             path: 'tasks',
             children: [
@@ -34,6 +32,7 @@ export const routes: RouteObject[] = [
           {
             path: 'jobs',
             children: [
+              { index: true, ...jobListingsIndexRoute },
               { path: 'my-listings', ...myJobListingsRoute },
               { path: 'new', element: <NewJobListingsPage /> },
               { path: ':id/edit', ...editJobListingRoute },
